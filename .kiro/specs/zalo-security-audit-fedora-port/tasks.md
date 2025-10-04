@@ -15,7 +15,7 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
   - Verify Fedora KDE Plasma 42 system is ready for testing
   - _Requirements: All_
 
-- [ ] 2. Analyze current codebase structure
+- [x] 2. Analyze current codebase structure
   - Document directory structure and key files
   - Identify minified files in `main-dist/` and `pc-dist/`
   - Map dependencies in `package.json`
@@ -26,20 +26,20 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
 
 ## Phase 2: Critical Bug Fixes (Wayland + KDE Integration)
 
-- [ ] 3. Fix Wayland window controls
-  - [ ] 3.1 Test current behavior on Wayland and X11
+- [x] 3. Fix Wayland window controls
+  - [x] 3.1 Test current behavior on Wayland and X11
     - Launch app and document window control issues
     - Test minimize, maximize, close buttons
     - Test titlebar drag functionality
     - _Requirements: 4.1, 4.2_
   
-  - [ ] 3.2 Implement native frame solution (Option A)
+  - [x] 3.2 Implement native frame solution (Option A)
     - Modify `BrowserWindow` creation in main process
     - Set `frame: true` for Linux platform
     - Test on Wayland and X11
     - _Requirements: 4.1, 4.2_
   
-  - [ ] 3.3 If native frame fails, implement custom titlebar (Option B)
+  - [x] 3.3 If native frame fails, implement custom titlebar (Option B)
     - Create React titlebar component with Zalo MacOS design
     - Add option for system theme matching
     - Implement IPC handlers for window controls
@@ -47,7 +47,7 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Test on Wayland and X11
     - _Requirements: 4.1, 4.2_
   
-  - [ ] 3.4 Verify window controls work correctly
+  - [x] 3.4 Verify window controls work correctly
     - Test minimize, maximize, close on Wayland
     - Test minimize, maximize, close on X11
     - Test window resize and drag
