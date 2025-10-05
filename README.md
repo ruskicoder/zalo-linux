@@ -61,6 +61,31 @@ sudo chown root $HOME/.local/share/Zalo/electron-v22.3.27-linux-x64/chrome-sandb
 sudo chmod 4755 $HOME/.local/share/Zalo/electron-v22.3.27-linux-x64/chrome-sandbox
 ```
 
+## Known Limitations
+
+### Message Synchronization (Mobile to Desktop)
+
+⚠️ **Message sync from mobile devices to desktop is not functional** in this Linux port.
+
+**Issue**: The message sync feature's initialization chain is broken or disabled. When attempting to sync, the app shows an error: "Message sync interpreter not initialized."
+
+**Root Cause**: The sync controller never initializes during app startup, likely due to:
+- Server-side restrictions for Linux clients
+- Incomplete MacOS → Linux port
+- Missing initialization hooks in the ported code
+
+**Workarounds**:
+- ✅ Real-time messaging works when app is open
+- ✅ Messages sent from desktop are delivered normally
+- ✅ Use mobile app for accessing message history
+- ✅ Use Zalo web version for better sync support
+
+**Technical Details**: See `TASK-7-FINAL-ANALYSIS.md` for complete investigation results.
+
+### Voice/Video Calls
+
+Voice and video call functionality has not been fully tested and may not work reliably.
+
 ## Bugs
 
 There will be some bugs, as I don't have an understanding of how electron work, I won't be able to fix any bugs.
