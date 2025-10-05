@@ -1,12 +1,3 @@
-# Implementation Plan
-
-## Task Overview
-
-This implementation plan breaks down the Zalo Linux security audit and Fedora port into discrete, manageable tasks. Tasks are organized by priority based on user requirements: **Wayland → KDE Integration → Message Sync → Security Updates**.
-
----
-
-## Phase 1: Environment Setup and Initial Analysis
 
 - [x] 1. Set up development environment
   - Create backup of current codebase to separate directory
@@ -22,9 +13,6 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
   - Identify Electron version and configuration
   - _Requirements: 1.1, 2.1_
 
----
-
-## Phase 2: Critical Bug Fixes (Wayland + KDE Integration)
 
 - [x] 3. Fix Wayland window controls
   - [x] 3.1 Test current behavior on Wayland and X11
@@ -53,103 +41,86 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Test window resize and drag
     - _Requirements: 4.1, 4.2, 4.5_
 
-- [-] 4. Implement KDE Plasma integration (Python-based for now)
-  - [-] 4.1 Fix and enhance Python tray implementation
-    - Verify Python `main.py` and tray dependencies work on Fedora
-    - Ensure tray icon appears in KDE Plasma system tray
-    - Test tray menu functionality (Open Zalo, Exit)
-    - Fix any Python tray issues on KDE Plasma
-    - _Requirements: 5.1, 5.2, 7.1_
-    - _Note: Native Electron tray deferred until after deobfuscation (Phase 4)_
-  
-  - [ ] 4.2 Implement tray settings (Python-based)
-    - Add "Close button hides to tray" setting
-    - Store setting in config file or Electron store
-    - Implement window close behavior based on setting
-    - _Requirements: 5.1_
-  
-  - [ ] 4.3 Implement KDE notifications
-    - Use Electron's `Notification` API
-    - Test notifications appear in KDE Plasma
-    - Verify notification actions work
-    - _Requirements: 5.2_
-  
-  - [ ] 4.4 Update desktop entry for KDE
-    - Modify `Zalo.desktop` file
-    - Follow XDG Desktop Entry Specification
-    - Set correct `Exec`, `Icon`, `Categories`
-    - Add `MimeType` and `StartupWMClass`
-    - _Requirements: 5.5_
-
----
-
-## Phase 3: Message Sync Fix
-
-- [ ] 5. Debug and fix message synchronization
-  - [ ] 5.1 Add comprehensive logging to sync service
-    - Identify message sync service in deobfuscated code
-    - Add logging for connection status, sync attempts, errors
-    - Log WebSocket connection state
-    - _Requirements: 4.3, 4.4_
-  
-  - [ ] 5.2 Test and identify root cause
-    - Run app with logging enabled
-    - Attempt to sync messages
-    - Analyze logs to identify failure point
-    - Check if it's server-side, client-side, or network issue
-    - _Requirements: 4.3, 4.4_
-  
-  - [ ] 5.3 Implement fix based on root cause
-    - If WebSocket issue: Fix connection logic
-    - If database issue: Fix IndexedDB/SQLite sync
-    - If authentication issue: Fix token handling
-    - If server-side issue: Implement workaround or document limitation
-    - _Requirements: 4.3, 4.4_
-  
-  - [ ] 5.4 Verify message sync works
-    - Test sending messages from desktop
-    - Test receiving messages on desktop
-    - Test sync after offline period
-    - Verify no duplicate messages
-    - _Requirements: 4.3, 4.4, 11.2_
-
----
-
-## Phase 4: Code Deobfuscation
-
-- [ ] 6. Deobfuscate critical JavaScript files
-  - [ ] 6.1 Deobfuscate main process code
+- [ ] 4. Deobfuscate critical JavaScript files
+  - [ ] 4.1 Deobfuscate main process code
     - Beautify `main-dist/main.js`
     - Analyze and rename variables where possible
     - Add comments for clarity
     - Save to `source-code/main-dist/main.js`
     - _Requirements: 1.1, 1.2, 1.3_
   
-  - [ ] 6.2 Deobfuscate renderer process code
+  - [ ] 4.2 Deobfuscate renderer process code
     - Beautify key files in `pc-dist/`
     - Focus on files related to messaging, file upload, sync
     - Add comments for clarity
     - Save to `source-code/pc-dist/`
     - _Requirements: 1.1, 1.2, 1.3_
   
-  - [ ] 6.3 Document code structure
+  - [ ] 4.3 Document code structure
     - Create `source-code/ARCHITECTURE.md`
     - Document high-level architecture
     - Document key modules and their purposes
     - Add code comments in deobfuscated files
     - _Requirements: 1.6, 10.6_
-  
-  - [ ] 6.4 Implement native Electron tray (post-deobfuscation)
+
+- [ ] 5. Implement KDE Plasma integration with native Electron
+  - [ ] 5.1 Implement native Electron tray
     - Remove Python `main.py` dependency
     - Implement `SystemTrayManager` class using Electron's `Tray` API
-    - Migrate tray menu to native Electron
+    - Create tray menu with: Open Zalo, Tray Settings, Exit
     - Test tray icon in KDE Plasma system tray
     - _Requirements: 5.1, 5.2, 7.1_
-    - _Note: Deferred from Task 4.1 - requires deobfuscated code to implement safely_
+    - _Note: Moved from Phase 2 - requires deobfuscated code_
+  
+  - [ ] 5.2 Implement tray settings
+    - Add "Close button hides to tray" setting
+    - Store setting in Electron store
+    - Implement window close behavior based on setting
+    - _Requirements: 5.1_
+  
+  - [ ] 5.3 Implement KDE notifications
+    - Use Electron's `Notification` API
+    - Test notifications appear in KDE Plasma
+    - Verify notification actions work
+    - _Requirements: 5.2_
+  
+  - [ ] 5.4 Update desktop entry for KDE
+    - Modify `Zalo.desktop` file
+    - Follow XDG Desktop Entry Specification
+    - Set correct `Exec`, `Icon`, `Categories`
+    - Add `MimeType` and `StartupWMClass`
+    - _Requirements: 5.5_
 
----
 
-## Phase 5: Electron and Dependency Updates
+- [ ] 6. Debug and fix message synchronization
+  - [ ] 6.1 Add comprehensive logging to sync service
+    - Identify message sync service in deobfuscated code
+    - Add logging for connection status, sync attempts, errors
+    - Log WebSocket connection state
+    - _Requirements: 4.3, 4.4_
+    - _Note: Moved from Phase 3 - requires deobfuscated code_
+  
+  - [ ] 6.2 Test and identify root cause
+    - Run app with logging enabled
+    - Attempt to sync messages
+    - Analyze logs to identify failure point
+    - Check if it's server-side, client-side, or network issue
+    - _Requirements: 4.3, 4.4_
+  
+  - [ ] 6.3 Implement fix based on root cause
+    - If WebSocket issue: Fix connection logic
+    - If database issue: Fix IndexedDB/SQLite sync
+    - If authentication issue: Fix token handling
+    - If server-side issue: Implement workaround or document limitation
+    - _Requirements: 4.3, 4.4_
+  
+  - [ ] 6.4 Verify message sync works
+    - Test sending messages from desktop
+    - Test receiving messages on desktop
+    - Test sync after offline period
+    - Verify no duplicate messages
+    - _Requirements: 4.3, 4.4, 11.2_
+
 
 - [ ] 7. Update Electron version
   - [ ] 7.1 Test with Electron v28.x LTS
@@ -209,9 +180,6 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Test all major features
     - _Requirements: 2.5, 11.1, 11.2, 11.3_
 
----
-
-## Phase 6: Privacy Controls and Security
 
 - [ ] 9. Implement privacy controls
   - [ ] 9.1 Create Privacy Manager module
@@ -261,10 +229,6 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Relax policy if needed for functionality
     - _Requirements: 8.3, 11.1, 11.2, 11.3_
 
----
-
-## Phase 7: Installation Script Hardening
-
 - [ ] 11. Harden installation script for Fedora
   - [ ] 11.1 Update install.sh for Fedora
     - Use `dnf` for Python dependencies
@@ -308,10 +272,6 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Provide download link (no auto-install)
     - _Requirements: None (user request)_
 
----
-
-## Phase 8: Documentation and Legal
-
 - [ ] 13. Create documentation
   - [ ] 13.1 Create SECURITY.md
     - Document security measures implemented
@@ -342,10 +302,6 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Credit VNG Corp for trademarks
     - Maintain welcoming tone
     - _Requirements: 9.1, 9.2, 9.3, 9.4_
-
----
-
-## Phase 9: Final Testing and Polish
 
 - [ ] 14. Comprehensive testing
   - [ ] 14.1 Test all core features
@@ -404,15 +360,3 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Test all features one final time
     - Verify no errors in console
     - _Requirements: All_
-
----
-
-## Notes
-
-- **Priority Order**: Wayland → KDE Integration → Message Sync → Security Updates
-- **Testing**: Manual testing after each major task, install/test/uninstall cycle
-- **Check-ins**: Report progress at major milestones (end of each phase)
-- **Timeline**: 6 days total, approximately 1-1.5 days per phase
-- **Backup**: Backup modified files before making changes, delete temp files after confirmation
-- **Bug Fixes**: Fix all bugs discovered during development
-- **Optional Tasks**: None marked as optional - all tasks are required for MVP
