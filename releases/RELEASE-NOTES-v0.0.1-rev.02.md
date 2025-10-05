@@ -7,30 +7,11 @@
 
 ---
 
-## 📦 Release Packages
-
-### 1. Zalo Linux (Standard)
-- **File**: `zalo-linux-v0.0.1-rev.02.tar.gz`
-- **Size**: ~66 MB
-- **Description**: Standard Zalo messenger for Linux
-
-### 2. ZaDark Linux (Dark Theme)
-- **File**: `zadark-linux-v0.0.1-rev.02.tar.gz`
-- **Size**: ~64 MB
-- **Description**: Zalo messenger with dark theme for Linux
-
----
-
 ## ✨ Features
 
 ### Working Features ✅
 - ✅ Real-time messaging
-- ✅ Send/receive messages
-- ✅ File sharing
-- ✅ Voice/video calls
-- ✅ Group chats
 - ✅ Native system tray integration (KDE Plasma)
-- ✅ Desktop notifications
 - ✅ Window controls and frame handling
 - ✅ Wayland support
 - ✅ Dark theme (ZaDark version)
@@ -39,40 +20,44 @@
 - ❌ **Message sync from mobile to desktop not functional**
   - Cannot sync message history from mobile
   - Cannot receive messages sent to mobile while desktop was closed
-  - **Workaround**: Keep desktop app open or use mobile app for history
+ 
+**Issue**: Messages sent to mobile while desktop is closed won't sync to desktop.
+
+**Cause**: Sync controller initialization chain is broken in the Linux port.
+
+**Workaround**: There is no workaround and the problem will never be fixed. For now.
+
+**Status**: Documented as known limitation. Cannot be fixed without major architectural changes or official Zalo Linux support.
+
+### Other Issues
+- Report issues at: [GitHub Issues](https://github.com/your-repo/zalo-linux/issues)
 
 ---
 
-## 🚀 Installation
+## INSTALLATION
 
-### Extract Package
+### Prerequisites
+
 ```bash
-# For standard version
-tar -xzf zalo-linux-v0.0.1-rev.02.tar.gz
+# Install Node.js and npm
+sudo dnf install nodejs npm
 
-# For dark theme version
-tar -xzf zadark-linux-v0.0.1-rev.02.tar.gz
+# Install Electron dependencies
+sudo dnf install libXScrnSaver gtk3 nss alsa-lib
 ```
 
-### Run Application
-```bash
-# Navigate to extracted directory
-cd Zalo
+### Installation
 
-# Run Zalo
-./Zalo
+```bash
+# From source-code directory
+cd source-code
+
+# Install
+sudo ./install.sh
+
+# You can install 2 variants: Zalo and ZaDark
 ```
 
-### Optional: Create Desktop Entry
-```bash
-# Copy to applications directory
-sudo cp Zalo.desktop /usr/share/applications/
-
-# Update desktop database
-sudo update-desktop-database
-```
-
----
 
 ## 📋 System Requirements
 
@@ -98,44 +83,6 @@ sudo pacman -S libxss libappindicator-gtk3
 
 ---
 
-## 🔧 Configuration
-
-### Application Location
-- Standard: `~/.config/Zalo/`
-- ZaDark: `~/.config/ZaDark/`
-
-### Logs Location
-- Application logs: `~/.config/Zalo/logs/`
-- Console output: Run from terminal to see
-
-### Cache Location
-- Cache files: `~/.cache/Zalo/`
-
----
-
-## 🐛 Known Issues
-
-### Message Sync Not Working
-**Issue**: Messages sent to mobile while desktop is closed won't sync to desktop.
-
-**Cause**: Sync controller initialization chain is broken in the Linux port.
-
-**Impact**: 
-- Cannot sync message history from mobile
-- Must keep desktop app open for real-time messages
-
-**Workarounds**:
-1. Keep desktop app open for real-time messaging
-2. Use mobile app to access message history
-3. Consider using Zalo web version
-
-**Status**: Documented as known limitation. Cannot be fixed without major architectural changes or official Zalo Linux support.
-
-### Other Issues
-- Report issues at: [GitHub Issues](https://github.com/your-repo/zalo-linux/issues)
-
----
-
 ## 📝 Changelog
 
 ### v0.0.1-rev.02 (2025-10-06)
@@ -145,32 +92,20 @@ sudo pacman -S libxss libappindicator-gtk3
 - ✅ Simplified tray menu (Open/Exit)
 - ✅ Wayland window controls fix
 - ✅ Improved window frame handling
-- ✅ Desktop notifications support
 - ✅ Dark theme version (ZaDark)
 
 #### Fixed
-- ✅ Application path detection for both English/Vietnamese versions
 - ✅ Window controls on Wayland
 - ✅ System tray icon display
 
 #### Known Limitations
 - ⚠️ Message sync from mobile not functional (documented)
 
-#### Removed
-- ❌ Electron binaries (too large for GitHub)
-- ❌ Outdated documentation files
-
 ---
 
 ## 🔐 Security Notes
 
 This is an unofficial Linux port of Zalo messenger. Use at your own risk.
-
-**Recommendations**:
-- Keep the application updated
-- Use strong passwords
-- Enable two-factor authentication in Zalo settings
-- Don't share sensitive information
 
 ---
 
@@ -201,7 +136,6 @@ This is an unofficial port. Original Zalo application is property of VNG Corpora
 
 - **Issues**: [GitHub Issues](https://github.com/your-repo/zalo-linux/issues)
 - **Documentation**: See README.md
-- **Known Limitations**: See KNOWN-ISSUES.md
 
 ---
 
