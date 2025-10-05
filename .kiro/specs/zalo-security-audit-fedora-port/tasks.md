@@ -53,8 +53,8 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Test window resize and drag
     - _Requirements: 4.1, 4.2, 4.5_
 
-- [ ] 4. Implement KDE Plasma integration
-  - [ ] 4.1 Replace Python tray with Electron native tray
+- [-] 4. Implement KDE Plasma integration
+  - [x] 4.1 Replace Python tray with Electron native tray
     - Remove Python `main.py` dependency
     - Implement `SystemTrayManager` class using Electron's `Tray` API
     - Create tray menu with: Open Zalo, Tray Settings, Exit
