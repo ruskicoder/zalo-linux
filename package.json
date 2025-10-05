@@ -1,5 +1,5 @@
 {
-  "dependencies": {
+  "devDependencies": {
     "escodegen": "^2.1.0",
     "esprima": "^4.0.1",
     "js-beautify": "^1.15.4"

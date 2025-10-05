@@ -41,26 +41,37 @@
     - Test window resize and drag
     - _Requirements: 4.1, 4.2, 4.5_
 
-- [ ] 4. Deobfuscate critical JavaScript files
-  - [ ] 4.1 Deobfuscate main process code
-    - Beautify `main-dist/main.js`
-    - Analyze and rename variables where possible
-    - Add comments for clarity
-    - Save to `source-code/main-dist/main.js`
+- [-] 4. Deobfuscate main and renderer processes from both Zalo variants
+  - [ ] 4.1 Deobfuscate Zalo variant - main process
+    - Beautify all files in `original/Zalo/Zalo/app/main-dist/`
+    - Add structural comments for clarity
+    - Save to `source-code/Zalo/main-dist/`
     - _Requirements: 1.1, 1.2, 1.3_
-  
-  - [ ] 4.2 Deobfuscate renderer process code
-    - Beautify key files in `pc-dist/`
-    - Focus on files related to messaging, file upload, sync
-    - Add comments for clarity
-    - Save to `source-code/pc-dist/`
+
+  - [ ] 4.2 Deobfuscate Zalo variant - renderer process
+    - Beautify all JavaScript files in `original/Zalo/Zalo/app/pc-dist/`
+    - Add structural comments for clarity
+    - Save to `source-code/Zalo/pc-dist/`
     - _Requirements: 1.1, 1.2, 1.3_
-  
-  - [ ] 4.3 Document code structure
-    - Create `source-code/ARCHITECTURE.md`
+
+  - [ ] 4.3 Deobfuscate ZaDark variant - main process
+    - Beautify all files in `original/ZaloZaDark/Zalo/app/main-dist/`
+    - Add structural comments for clarity
+    - Save to `source-code/ZaDark/main-dist/`
+    - _Requirements: 1.1, 1.2, 1.3_
+
+  - [ ] 4.4 Deobfuscate ZaDark variant - renderer process
+    - Beautify all JavaScript files in `original/ZaloZaDark/Zalo/app/pc-dist/`
+    - Add structural comments for clarity
+    - Save to `source-code/ZaDark/pc-dist/`
+    - _Requirements: 1.1, 1.2, 1.3_
+
+  - [ ] 4.5 Document code structure for both variants
+    - Create `source-code/Zalo/ARCHITECTURE.md`
+    - Create `source-code/ZaDark/ARCHITECTURE.md`
     - Document high-level architecture
     - Document key modules and their purposes
-    - Add code comments in deobfuscated files
+    - Document differences between Zalo and ZaDark variants
     - _Requirements: 1.6, 10.6_
 
 - [ ] 5. Implement KDE Plasma integration with native Electron
