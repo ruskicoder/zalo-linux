@@ -53,24 +53,10 @@ function initialize(mainWindow) {
 }
 
 /**
- * Setup window event handlers
+ * Setup window event handlers (simplified - no special behavior)
  * @param {BrowserWindow} mainWindow - Main application window
  */
 function setupWindowHandlers(mainWindow) {
-  // Handle window close
-  mainWindow.on('close', (event) => {
-    if (trayManager && trayManager.handleWindowClose(event)) {
-      console.log('[TrayIntegration] Window close prevented, hiding to tray');
-    }
-  });
-
-  // Handle window minimize
-  mainWindow.on('minimize', (event) => {
-    if (trayManager && trayManager.handleWindowMinimize(event)) {
-      console.log('[TrayIntegration] Window minimize prevented, hiding to tray');
-    }
-  });
-
   // Handle window destroyed - update tray manager reference
   mainWindow.on('closed', () => {
     console.log('[TrayIntegration] Main window closed');
@@ -78,15 +64,6 @@ function setupWindowHandlers(mainWindow) {
       trayManager.mainWindow = null;
     }
   });
-
-  // Check if should start minimized
-  if (trayManager && trayManager.shouldStartMinimized()) {
-    console.log('[TrayIntegration] Starting minimized to tray');
-    // Hide window after a short delay to ensure it's fully loaded
-    setTimeout(() => {
-      mainWindow.hide();
-    }, 1000);
-  }
 }
 
 /**

@@ -156,13 +156,15 @@
     - Add `MimeType` and `StartupWMClass`
     - _Requirements: 5.5_
 
-- [ ] 6.5 Fix tray settings behavior
-  - Fix "Close to tray" toggle behavior
-  - Ensure window doesn't restore when setting is disabled
-  - Fix tray icon click behavior to respect settings
-  - Test all tray settings combinations
+- [x] 6.5 Simplify tray menu (remove settings)
+  - Remove "Tray Settings" submenu completely
+  - Keep only "Open Zalo" and "Exit" in tray menu
+  - Remove all tray settings logic (closeToTray, minimizeToTray, startMinimized)
+  - Remove tray-settings.json file handling
+  - Simplify tray click behavior to always show window
+  - Update both Zalo and ZaDark variants
   - _Requirements: 5.1_
-  - _Note: Tray settings UI works but behavior needs refinement_
+  - _Note: User requested simplified tray with no settings_
 
 - [ ] 7. Debug and fix message synchronization
   - [ ] 7.1 Add comprehensive logging to sync service

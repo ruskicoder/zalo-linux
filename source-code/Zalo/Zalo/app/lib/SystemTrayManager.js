@@ -4,6 +4,8 @@
  * Replaces Python pystray dependency with native Electron Tray API
  * Provides KDE Plasma integration with StatusNotifierItem protocol
  * 
+ * Simplified version with no settings - just "Open Zalo" and "Exit"
+ * 
  * Requirements: 5.1, 5.2, 7.1
  */
 
@@ -15,60 +17,6 @@ class SystemTrayManager {
   constructor() {
     this.tray = null;
     this.mainWindow = null;
-    this.settings = this.loadSettings();
-  }
-
-  /**
-   * Load tray settings from storage
-   * @returns {Object} Settings object
-   */
-  loadSettings() {
-    // Default settings
-    const defaults = {
-      closeToTray: false, // Close button hides to tray (disabled by default)
-      minimizeToTray: false, // Minimize button hides to tray (disabled by default)
-      startMinimized: false // Start minimized to tray (disabled by default)
-    };
-
-    try {
-      const userDataPath = app.getPath('userData');
-      const settingsPath = path.join(userDataPath, 'tray-settings.json');
-      
-      if (fs.existsSync(settingsPath)) {
-        const data = fs.readFileSync(settingsPath, 'utf8');
-        return { ...defaults, ...JSON.parse(data) };
-      }
-    } catch (error) {
-      console.error('[SystemTrayManager] Failed to load settings:', error);
-    }
-
-    return defaults;
-  }
-
-  /**
-   * Save tray settings to storage
-   * @param {Object} settings - Settings to save
-   */
-  saveSettings(settings) {
-    try {
-      const userDataPath = app.getPath('userData');
-      const settingsPath = path.join(userDataPath, 'tray-settings.json');
-      
-      this.settings = { ...this.settings, ...settings };
-      fs.writeFileSync(settingsPath, JSON.stringify(this.settings, null, 2), 'utf8');
-      
-      console.log('[SystemTrayManager] Settings saved:', this.settings);
-    } catch (error) {
-      console.error('[SystemTrayManager] Failed to save settings:', error);
-    }
-  }
-
-  /**
-   * Get current tray settings
-   * @returns {Object} Current settings
-   */
-  getSettings() {
-    return { ...this.settings };
   }
 
   /**
@@ -137,7 +85,7 @@ class SystemTrayManager {
   }
 
   /**
-   * Update context menu
+   * Update context menu (simplified - no settings)
    */
   updateContextMenu() {
     if (!this.tray) return;
@@ -146,41 +94,6 @@ class SystemTrayManager {
       {
         label: 'Open Zalo',
         click: () => this.showWindow()
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Tray Settings',
-        submenu: [
-          {
-            label: 'Close button hides to tray',
-            type: 'checkbox',
-            checked: this.settings.closeToTray,
-            click: (menuItem) => {
-              this.saveSettings({ closeToTray: menuItem.checked });
-              this.updateContextMenu();
-            }
-          },
-          {
-            label: 'Minimize to tray',
-            type: 'checkbox',
-            checked: this.settings.minimizeToTray,
-            click: (menuItem) => {
-              this.saveSettings({ minimizeToTray: menuItem.checked });
-              this.updateContextMenu();
-            }
-          },
-          {
-            label: 'Start minimized to tray',
-            type: 'checkbox',
-            checked: this.settings.startMinimized,
-            click: (menuItem) => {
-              this.saveSettings({ startMinimized: menuItem.checked });
-              this.updateContextMenu();
-            }
-          }
-        ]
       },
       {
         type: 'separator'
@@ -226,7 +139,7 @@ class SystemTrayManager {
   }
 
   /**
-   * Toggle window visibility
+   * Toggle window visibility (simplified - always show)
    */
   toggleWindow() {
     if (!this.mainWindow || this.mainWindow.isDestroyed()) {
@@ -234,47 +147,8 @@ class SystemTrayManager {
       return;
     }
 
-    if (this.mainWindow.isVisible()) {
-      this.hideWindow();
-    } else {
-      this.showWindow();
-    }
-  }
-
-  /**
-   * Handle window close event
-   * @param {Event} event - Close event
-   * @returns {boolean} True if event was handled (prevented)
-   */
-  handleWindowClose(event) {
-    if (this.settings.closeToTray) {
-      event.preventDefault();
-      this.hideWindow();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Handle window minimize event
-   * @param {Event} event - Minimize event
-   * @returns {boolean} True if event was handled (prevented)
-   */
-  handleWindowMinimize(event) {
-    if (this.settings.minimizeToTray) {
-      event.preventDefault();
-      this.hideWindow();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Check if app should start minimized
-   * @returns {boolean} True if should start minimized
-   */
-  shouldStartMinimized() {
-    return this.settings.startMinimized;
+    // Always show window when tray is clicked
+    this.showWindow();
   }
 
   /**
