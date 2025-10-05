@@ -3,10 +3,10 @@
 # https://specifications.freedesktop.org/desktop-entry-spec/latest/
 
 # Basic Information
-Name=Zalo
+Name=ZaDark
 GenericName=Instant Messenger
-Comment=Zalo Messenger for Linux - Unofficial Community Port
-Keywords=chat;messenger;im;zalo;message;
+Comment=Zalo Messenger with Dark Theme - Unofficial Community Port
+Keywords=chat;messenger;im;zalo;zadark;message;dark;theme;
 
 # Executable and Icon
 Exec=bash %h/.local/share/Zalo/start.sh

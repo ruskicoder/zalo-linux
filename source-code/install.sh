@@ -98,25 +98,18 @@ else
     DISTRO_ID="unknown"
 fi
 
-# Install Python dependencies
+# Install system dependencies (no Python packages needed - using native Electron tray)
 if [ "$LANGUAGE" == "EN" ]; then
-    echo "Installing Python dependencies..."
+    echo "Installing system dependencies..."
 else
-    echo "Đang cài đặt các phụ thuộc Python..."
+    echo "Đang cài đặt các phụ thuộc hệ thống..."
 fi
 
 if [ "$DISTRO_ID" == "fedora" ]; then
-    sudo dnf install -y python3-pystray python3-pillow python3-pip wget unzip
+    sudo dnf install -y wget unzip
 elif [ "$DISTRO_ID" == "ubuntu" ] || [ "$DISTRO_ID" == "debian" ]; then
     sudo apt-get update
-    sudo apt-get install -y python3-pystray python3-pil python3-pip wget unzip
-else
-    # Fallback to pip
-    if command -v pip3 >/dev/null 2>&1; then
-        pip3 install pystray pillow --break-system-packages
-    else
-        pip install pystray pillow --break-system-packages
-    fi
+    sudo apt-get install -y wget unzip
 fi
 
 # Clean up old installation
@@ -196,14 +189,7 @@ cp -r /tmp/zalo-installer/$ZALO_DIR/Zalo ~/.local/share/Zalo
 # Copy assets
 cp -r /tmp/zalo-installer/$ZALO_DIR/assets ~/.local/share/Zalo/
 
-# Copy Python tray script and start script
-if [ "$LANGUAGE" == "EN" ]; then
-    cp /tmp/zalo-installer/en/main.py ~/.local/share/Zalo/
-else
-    cp /tmp/zalo-installer/vn/main.py ~/.local/share/Zalo/
-fi
-
-# Copy start.sh from the selected version
+# Copy start.sh from the selected version (no Python tray needed - using native Electron)
 cp "$SCRIPT_DIR/$ZALO_DIR/start.sh" ~/.local/share/Zalo/
 chmod +x ~/.local/share/Zalo/start.sh
 
@@ -214,19 +200,26 @@ else
     echo "Đang tạo các mục desktop..."
 fi
 
+# Replace both $HOME and %h with actual home directory path
 sed -i "s|\$HOME|$HOME|g" "/tmp/zalo-installer/prepare/Zalo.desktop"
+sed -i "s|%h|$HOME|g" "/tmp/zalo-installer/prepare/Zalo.desktop"
 
 if [ "$LANGUAGE" == "EN" ]; then
     sed -i "s|\$HOME|$HOME|g" "/tmp/zalo-installer/prepare/Update Zalo.desktop"
+    sed -i "s|%h|$HOME|g" "/tmp/zalo-installer/prepare/Update Zalo.desktop"
     cp "/tmp/zalo-installer/prepare/Update Zalo.desktop" ~/.local/share/applications/
 else
     sed -i "s|\$HOME|$HOME|g" "/tmp/zalo-installer/prepare/Cập Nhật Zalo.desktop"
+    sed -i "s|%h|$HOME|g" "/tmp/zalo-installer/prepare/Cập Nhật Zalo.desktop"
     cp "/tmp/zalo-installer/prepare/Cập Nhật Zalo.desktop" ~/.local/share/applications/
 fi
 
 cp /tmp/zalo-installer/prepare/Zalo.desktop ~/.local/share/applications/
 cp /tmp/zalo-installer/prepare/Zalo.desktop ~/Desktop/
 chmod +x ~/Desktop/Zalo.desktop
+
+# Update desktop database to refresh application menu
+update-desktop-database ~/.local/share/applications/ 2>/dev/null || true
 
 # Copy update script and version
 cp /tmp/zalo-installer/update.sh ~/.local/share/Zalo/
@@ -257,13 +250,15 @@ echo "=========================================="
 if [ "$LANGUAGE" == "EN" ]; then
     echo "✅ Installation complete!"
     echo ""
-    echo "Zalo v24.9.1 (Wayland Fixed) has been installed."
+    echo "Zalo v24.9.1 (Wayland Fixed + Native Tray) has been installed."
     echo ""
     echo "Features:"
     echo "  ✅ Native window frame for Wayland/X11"
     echo "  ✅ Working window controls (minimize, maximize, close)"
     echo "  ✅ Draggable titlebar"
     echo "  ✅ Resizable window"
+    echo "  ✅ Native Electron system tray (no Python dependency)"
+    echo "  ✅ KDE Plasma notification integration"
     echo ""
     echo "You can now:"
     echo "  1. Launch Zalo from the application menu"
@@ -275,13 +270,15 @@ if [ "$LANGUAGE" == "EN" ]; then
 else
     echo "✅ Cài đặt hoàn tất!"
     echo ""
-    echo "Zalo v24.9.1 (Đã sửa Wayland) đã được cài đặt."
+    echo "Zalo v24.9.1 (Đã sửa Wayland + Khay hệ thống gốc) đã được cài đặt."
     echo ""
     echo "Tính năng:"
     echo "  ✅ Khung cửa sổ gốc cho Wayland/X11"
     echo "  ✅ Các nút điều khiển cửa sổ hoạt động"
     echo "  ✅ Thanh tiêu đề có thể kéo"
     echo "  ✅ Cửa sổ có thể thay đổi kích thước"
+    echo "  ✅ Khay hệ thống Electron gốc (không cần Python)"
+    echo "  ✅ Tích hợp thông báo KDE Plasma"
     echo ""
     echo "Bạn có thể:"
     echo "  1. Khởi chạy Zalo từ menu ứng dụng"

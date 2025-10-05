@@ -128,8 +128,8 @@
     - Add performance-critical function documentation
     - _Requirements: 1.6, 10.6_
 
-- [ ] 6. Implement KDE Plasma integration with native Electron
-  - [ ] 6.1 Implement native Electron tray
+- [x] 6. Implement KDE Plasma integration with native Electron
+  - [x] 6.1 Implement native Electron tray
     - Remove Python `main.py` dependency
     - Implement `SystemTrayManager` class using Electron's `Tray` API
     - Create tray menu with: Open Zalo, Tray Settings, Exit
@@ -137,24 +137,32 @@
     - _Requirements: 5.1, 5.2, 7.1_
     - _Note: Moved from Phase 2 - requires deobfuscated code_
 
-  - [ ] 6.2 Implement tray settings
+  - [x] 6.2 Implement tray settings
     - Add "Close button hides to tray" setting
     - Store setting in Electron store
     - Implement window close behavior based on setting
     - _Requirements: 5.1_
 
-  - [ ] 6.3 Implement KDE notifications
+  - [x] 6.3 Implement KDE notifications
     - Use Electron's `Notification` API
     - Test notifications appear in KDE Plasma
     - Verify notification actions work
     - _Requirements: 5.2_
 
-  - [ ] 6.4 Update desktop entry for KDE
+  - [x] 6.4 Update desktop entry for KDE
     - Modify `Zalo.desktop` file
     - Follow XDG Desktop Entry Specification
     - Set correct `Exec`, `Icon`, `Categories`
     - Add `MimeType` and `StartupWMClass`
     - _Requirements: 5.5_
+
+- [ ] 6.5 Fix tray settings behavior
+  - Fix "Close to tray" toggle behavior
+  - Ensure window doesn't restore when setting is disabled
+  - Fix tray icon click behavior to respect settings
+  - Test all tray settings combinations
+  - _Requirements: 5.1_
+  - _Note: Tray settings UI works but behavior needs refinement_
 
 - [ ] 7. Debug and fix message synchronization
   - [ ] 7.1 Add comprehensive logging to sync service

@@ -1,23 +1,12 @@
 #!/bin/bash
 
 # Zalo Linux Startup Script
-# This script starts the Zalo application with the Python tray
+# This script starts the Zalo application with native Electron tray
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
-
 # Check if running from source-code directory or installed location
-if [ -f "$SCRIPT_DIR/main.py" ]; then
-    # Running from installed location (~/.local/share/Zalo/)
-    if command_exists python ; then
-        python "$SCRIPT_DIR/main.py"
-    else
-        python3 "$SCRIPT_DIR/main.py"
-    fi
-elif [ -f "$SCRIPT_DIR/Zalo/app/bootstrap.js" ]; then
+if [ -f "$SCRIPT_DIR/Zalo/app/bootstrap.js" ]; then
     # Running from source-code/Zalo/ directory
     cd "$SCRIPT_DIR/Zalo"
     
@@ -35,8 +24,27 @@ elif [ -f "$SCRIPT_DIR/Zalo/app/bootstrap.js" ]; then
         sudo chmod 4755 electron-v22.3.27-linux-x64/chrome-sandbox
     fi
     
-    # Start Electron directly
+    # Start Electron directly with native tray (no Python dependency)
+    echo "Starting Zalo with native Electron tray..."
     ./electron-v22.3.27-linux-x64/electron app --enable-features=UseOzonePlatform --ozone-platform=wayland
+elif [ -f "$SCRIPT_DIR/app/bootstrap.js" ]; then
+    # Running from installed location (~/.local/share/Zalo/)
+    # The installation copies the Zalo subdirectory contents directly
+    
+    # Change to the script directory so Electron can find the app
+    cd "$SCRIPT_DIR"
+    
+    # Start Electron directly with native tray
+    echo "Starting Zalo with native Electron tray..."
+    
+    # Detect session type
+    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        echo "Detected Wayland session"
+        ./electron-v22.3.27-linux-x64/electron app --enable-features=UseOzonePlatform --ozone-platform=wayland
+    else
+        echo "Detected X11 session"
+        ./electron-v22.3.27-linux-x64/electron app
+    fi
 else
     echo "Error: Cannot find Zalo application files."
     echo "Please run this script from either:"

@@ -6,6 +6,8 @@ function bootstrap() {
   if (require('electron').app.requestSingleInstanceLock()) {
     perf.record(perf.MAIN_SCRIPT);
     require('./main-dist/main');
+    // Initialize native Electron system tray (replaces Python tray)
+    require('./init-tray');
   } else {
     require('./main-dist/second-instance');
   }

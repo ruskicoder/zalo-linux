@@ -7,6 +7,8 @@ function bootstrap() {
     perf.record(perf.MAIN_SCRIPT);
     require('./main-dist/main');
     require('./pc-dist/zadark-main.min');
+    // Initialize native Electron system tray (replaces Python tray)
+    require('./init-tray');
   } else {
     require('./main-dist/second-instance');
   }
