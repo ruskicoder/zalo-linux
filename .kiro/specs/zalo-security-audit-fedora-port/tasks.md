@@ -2,7 +2,7 @@
 
 ## Task Overview
 
-This implementation plan breaks down the Zalo Linux security audit and Fedora port into discrete, manageable tasks. Tasks are organized by priority based on user requirements: **Wayland → KDE Integration → Message Sync → Security Updates**. 
+This implementation plan breaks down the Zalo Linux security audit and Fedora port into discrete, manageable tasks. Tasks are organized by priority based on user requirements: **Wayland → KDE Integration → Message Sync → Security Updates**.
 
 ---
 
@@ -53,17 +53,18 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Test window resize and drag
     - _Requirements: 4.1, 4.2, 4.5_
 
-- [-] 4. Implement KDE Plasma integration
-  - [x] 4.1 Replace Python tray with Electron native tray
-    - Remove Python `main.py` dependency
-    - Implement `SystemTrayManager` class using Electron's `Tray` API
-    - Create tray menu with: Open Zalo, Tray Settings, Exit
-    - Test tray icon appears in KDE Plasma system tray
+- [-] 4. Implement KDE Plasma integration (Python-based for now)
+  - [-] 4.1 Fix and enhance Python tray implementation
+    - Verify Python `main.py` and tray dependencies work on Fedora
+    - Ensure tray icon appears in KDE Plasma system tray
+    - Test tray menu functionality (Open Zalo, Exit)
+    - Fix any Python tray issues on KDE Plasma
     - _Requirements: 5.1, 5.2, 7.1_
+    - _Note: Native Electron tray deferred until after deobfuscation (Phase 4)_
   
-  - [ ] 4.2 Implement tray settings
+  - [ ] 4.2 Implement tray settings (Python-based)
     - Add "Close button hides to tray" setting
-    - Store setting in Electron store
+    - Store setting in config file or Electron store
     - Implement window close behavior based on setting
     - _Requirements: 5.1_
   
@@ -137,6 +138,14 @@ This implementation plan breaks down the Zalo Linux security audit and Fedora po
     - Document key modules and their purposes
     - Add code comments in deobfuscated files
     - _Requirements: 1.6, 10.6_
+  
+  - [ ] 6.4 Implement native Electron tray (post-deobfuscation)
+    - Remove Python `main.py` dependency
+    - Implement `SystemTrayManager` class using Electron's `Tray` API
+    - Migrate tray menu to native Electron
+    - Test tray icon in KDE Plasma system tray
+    - _Requirements: 5.1, 5.2, 7.1_
+    - _Note: Deferred from Task 4.1 - requires deobfuscated code to implement safely_
 
 ---
 

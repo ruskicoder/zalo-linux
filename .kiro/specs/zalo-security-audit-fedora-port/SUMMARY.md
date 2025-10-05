@@ -139,6 +139,8 @@
 
 **Task:** Fix Wayland Window Controls
 
+**Note:** Initial attempt to implement native Electron tray (Task 4.1) was unsuccessful due to minified code complexity. Decision made to work with Python tray implementation for now and defer native Electron approach until after deobfuscation phase.
+
 **Activities:**
 
 - Analyzed current window configuration (frameless window)
@@ -329,9 +331,9 @@ frame: "linux" === process.platform,  // true on Linux, false on macOS/Windows
 
 **Phase 2: KDE Plasma Integration**
 
-- ⏳ Task 4: Implement KDE Plasma integration
-  - ⏳ Task 4.1: Replace Python tray with Electron native
-  - ⏳ Task 4.2: Implement tray settings
+- ⏳ Task 4: Implement KDE Plasma integration (Python-based)
+  - ⏳ Task 4.1: Fix and enhance Python tray implementation
+  - ⏳ Task 4.2: Implement tray settings (Python-based)
   - ⏳ Task 4.3: Implement KDE notifications
   - ⏳ Task 4.4: Update desktop entry
 
@@ -343,9 +345,17 @@ frame: "linux" === process.platform,  // true on Linux, false on macOS/Windows
   - ⏳ Task 5.3: Identify root cause
   - ⏳ Task 5.4: Fix or document issue
 
-**Phase 4-9: Security Updates & Documentation**
+**Phase 4: Code Deobfuscation**
 
-- ⏳ Tasks 6-15: Remaining implementation tasks
+- ⏳ Task 6: Deobfuscate critical JavaScript files
+  - ⏳ Task 6.1: Deobfuscate main process code
+  - ⏳ Task 6.2: Deobfuscate renderer process code
+  - ⏳ Task 6.3: Document code structure
+  - ⏳ Task 6.4: Implement native Electron tray (post-deobfuscation)
+
+**Phase 5-9: Security Updates & Documentation**
+
+- ⏳ Tasks 7-15: Remaining implementation tasks
 
 ---
 
@@ -403,9 +413,10 @@ None - All critical issues resolved
 ### Medium Priority Issues
 
 1. **Python Tray Still in Use**
-   - Status: Not yet replaced
+   - Status: Will remain until deobfuscation complete
    - Impact: Extra dependency, not native
-   - Next: Task 4.1 - Replace with Electron native tray
+   - Next: Task 4.1 - Fix Python tray, Task 6.4 - Native Electron tray (post-deobfuscation)
+   - Reason: Minified code makes native Electron implementation unsafe
 
 ### Low Priority Issues
 
@@ -432,8 +443,8 @@ None - All critical issues resolved
 
 ## Next Steps
 
-1. **Task 4:** Implement KDE Plasma integration
-   - Replace Python tray with Electron native
+1. **Task 4:** Implement KDE Plasma integration (Python-based)
+   - Fix and enhance Python tray implementation
    - Implement tray menu and settings
    - Implement KDE notifications
    - Update desktop entry
@@ -471,6 +482,12 @@ None - All critical issues resolved
    - v0.0.1-rev.01 provides immediate value
    - Users can test and provide feedback
    - Builds momentum for the project
+
+6. **Minified code requires deobfuscation before major refactoring**
+   - Attempting to wrap or modify minified code leads to corruption
+   - Native Electron implementations should wait until code is readable
+   - Python-based solutions are safer for minified codebases
+   - Deobfuscation must come before architectural changes
 
 ---
 
