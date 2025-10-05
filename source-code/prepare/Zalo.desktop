@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment=
+Name=Zalo
+Exec=bash $HOME/.local/share/Zalo/start.sh
+Icon=$HOME/.local/share/Zalo/assets/Zalo.png
+Terminal=false
+Type=Application
