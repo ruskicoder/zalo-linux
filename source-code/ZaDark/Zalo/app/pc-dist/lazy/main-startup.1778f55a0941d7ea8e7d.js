@@ -9496,7 +9496,12 @@
                 },
                 download_backup: {
                   entry: () => {
-                    e.zsymb(3, "k1FV0A", ["download_backup", "5BoljT"]), Q.a.SyncMessageController.clearRequestBackupTimeout(), s.showDownloadingBackup()
+                    console.log("[SYNC-DEBUG-7.5] STATE MACHINE: Entered download_backup state");
+                    e.zsymb(3, "k1FV0A", ["download_backup", "5BoljT"]);
+                    console.log("[SYNC-DEBUG-7.5] STATE MACHINE: Clearing request timeout and showing download UI");
+                    Q.a.SyncMessageController.clearRequestBackupTimeout();
+                    s.showDownloadingBackup();
+                    console.log("[SYNC-DEBUG-7.5] STATE MACHINE: About to invoke download function");
                   },
                   invoke: {
                     strict: !0,
@@ -9934,7 +9939,12 @@
                 },
                 download_backup: {
                   entry: () => {
-                    e.zsymb(3, "2w4cPA", ["download_backup", "5BoljT"]), Q.a.SyncMessageController.clearRequestBackupTimeout(), s.showDownloadingBackup()
+                    console.log("[SYNC-DEBUG-7.5] STATE MACHINE #2: Entered download_backup state");
+                    e.zsymb(3, "2w4cPA", ["download_backup", "5BoljT"]);
+                    console.log("[SYNC-DEBUG-7.5] STATE MACHINE #2: Clearing request timeout and showing download UI");
+                    Q.a.SyncMessageController.clearRequestBackupTimeout();
+                    s.showDownloadingBackup();
+                    console.log("[SYNC-DEBUG-7.5] STATE MACHINE #2: About to invoke download function");
                   },
                   invoke: {
                     strict: !0,
@@ -10561,11 +10571,24 @@
                   conversations: []
                 });
                 const c = this.setting.value();
-                return this.storage.syncState.resetCheckpoint(r, c.minSeq, c.maxSeq), this.logger.zsymb(0, "ELWuwB", (() => ["received backup", {
+                console.log("[SYNC-DEBUG-7.5] Backup info saved:", {
+                  url: a.data.url,
+                  fileName: a.data.file_name,
+                  checksum: a.data.checksum_code || a.data.checksum || "",
                   format: r,
                   msgCount: n,
                   threadCount: t
-                }])), void this.machine.send("SUCCESS")
+                });
+                this.storage.syncState.resetCheckpoint(r, c.minSeq, c.maxSeq);
+                this.logger.zsymb(0, "ELWuwB", (() => ["received backup", {
+                  format: r,
+                  msgCount: n,
+                  threadCount: t
+                }]));
+                console.log("[SYNC-DEBUG-7.5] About to send SUCCESS event to state machine");
+                this.machine.send("SUCCESS");
+                console.log("[SYNC-DEBUG-7.5] SUCCESS event sent, state machine should transition to download");
+                return;
               }
               if (Uo.a.isBackupFail(t, a)) return void this.machine.send("ERR_BACKUP_FAIL");
               if (Uo.a.isMobileRestoring(t, a)) return void this.machine.send("ERR_BUSY_RESTORING");
@@ -10960,11 +10983,25 @@
           this.logger.zsymb(0, "C9mW4c", "abort current task"), await this.abortRestore(), this.logger.zsymb(0, "2xe-7E", "clean storage"), await this.cleanupTempFiles(), this.storage.clear(), this.logger.zsymb(0, "XEN171", "clean session"), this.session = null, this.logger.zsymb(0, "TflMll", "cleanup done")
         }
         async download(e = 0) {
+          alert("[SYNC-DEBUG] Download function called! Check console for details.");
+          console.log("[SYNC-DEBUG-7.5] DOWNLOAD FUNCTION: Called with retry count:", e);
           this.logger.zsymb(0, "xzRF4y", (() => ["downloading backup", {
             retry: e
           }]));
           const t = this.storage.backup.get();
-          if (!t) return this.metricts.onDownloadBackupFailure(Io.g.SELF_DEFINE, Io.b.BACKUP_NOT_FOUND), Promise.reject("No backup found");
+          console.log("[SYNC-DEBUG-7.5] DOWNLOAD FUNCTION: Retrieved backup from storage:", t ? {
+            name: t.name,
+            url: t.url,
+            checksum: t.checksum,
+            format: t.format
+          } : "NULL");
+          if (!t) {
+            console.error("[SYNC-DEBUG-7.5] DOWNLOAD FUNCTION: ERROR - No backup found in storage!");
+            alert("[SYNC-DEBUG] ERROR: No backup found in storage!");
+            return this.metricts.onDownloadBackupFailure(Io.g.SELF_DEFINE, Io.b.BACKUP_NOT_FOUND), Promise.reject("No backup found");
+          }
+          console.log("[SYNC-DEBUG-7.5] DOWNLOAD FUNCTION: Starting download from URL:", t.url);
+          alert("[SYNC-DEBUG] Starting download from: " + t.url);
           await mc.a.run({
             type: mc.a.constants.DownloadType.File,
             data: {

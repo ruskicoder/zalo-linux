@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Executive Summary](#executive-summary)
 2. [What We Fixed](#what-we-fixed)
 3. [Current Status](#current-status)
@@ -26,6 +27,7 @@ We successfully debugged and partially fixed the message synchronization feature
 **Progress**: From 0% (complete failure) to ~70% (partial success)
 
 ### Before Fix
+
 - ❌ Clicking sync button caused immediate crash
 - ❌ Error: "TypeError: Cannot read properties of undefined (reading 'send')"
 - ❌ MessageSync controller never initialized
@@ -33,6 +35,7 @@ We successfully debugged and partially fixed the message synchronization feature
 - ❌ No sync functionality at all
 
 ### After Fix
+
 - ✅ Sync button works without crashes
 - ✅ Desktop successfully requests sync from mobile
 - ✅ Mobile receives request and prepares backup data
@@ -51,6 +54,7 @@ We successfully debugged and partially fixed the message synchronization feature
 **Additional Issue**: The feature was disabled by config (`cross_setting.offFeature` or `cross_setting.enable` set incorrectly).
 
 **Solution**: Implemented forced initialization in the constructor that:
+
 - Bypasses the `isEnable()` check
 - Directly calls `machine.create()` and `machine.start()`
 - Sets `initialized = true`
@@ -59,6 +63,7 @@ We successfully debugged and partially fixed the message synchronization feature
 ### 2. DevTools Access
 
 **Added**: "Toggle DevTools" menu item in Window menu
+
 - **Location**: Window → Toggle DevTools
 - **Shortcut**: Ctrl+Shift+I (Cmd+Shift+I on Mac)
 - **Purpose**: Easy access to console for debugging
@@ -185,24 +190,28 @@ setTimeout(() => {
 ## Testing Results
 
 ### Test 1: Initialization ✅ PASS
+
 - [x] No initialization errors
 - [x] State machine created successfully
 - [x] Sync can be triggered without crashes
 - [x] Console shows initialization logs
 
 ### Test 2: Sync Request ✅ PASS
+
 - [x] Desktop sends sync request to mobile
 - [x] Mobile receives request
 - [x] Mobile prepares backup data
 - [x] Mobile sends data to server
 
 ### Test 3: Data Transfer ❌ FAIL
+
 - [ ] Desktop fails to download backup
 - [ ] No error messages in console
 - [ ] Sync process stops silently
 - [ ] Messages don't appear on desktop
 
 ### Test 4: Real-time Messaging ✅ PASS
+
 - [x] Sending messages works
 - [x] Receiving messages works
 - [x] No crashes or errors
@@ -218,6 +227,7 @@ setTimeout(() => {
 **Impact**: Message history doesn't sync, offline messages don't sync
 
 **Possible Causes**:
+
 - Server-side restriction for Linux clients
 - Network/firewall blocking the transfer
 - Encryption/decryption key mismatch
@@ -233,6 +243,7 @@ setTimeout(() => {
 **Impact**: Difficult to debug the exact failure point
 
 **Possible Causes**:
+
 - Error handling swallows exceptions
 - Logging disabled for download/decrypt states
 - Error occurs in different process/worker
@@ -289,12 +300,14 @@ setTimeout(() => {
 ### Recommended Usage
 
 **Best Practice**:
+
 - Use desktop for real-time messaging
 - Use mobile for message history
 - Keep desktop app open during work hours
 - Check mobile app for missed messages
 
 **Alternative**:
+
 - Use Zalo web version (chat.zalo.me) for better sync
 - May have different limitations
 - No installation required
@@ -304,14 +317,17 @@ setTimeout(() => {
 To monitor sync attempts and see logs:
 
 **Method 1**: Keyboard shortcut
+
 - Press `Ctrl+Shift+I` (Linux/Windows)
 - Press `Cmd+Shift+I` (Mac)
 
 **Method 2**: Menu
+
 - Click `Window` menu
 - Click `Toggle DevTools`
 
 **What to Look For**:
+
 - `[MESSAGE-SYNC-AUTO-INIT]` messages on startup
 - Sync-related errors when attempting sync
 - Network requests in Network tab
@@ -321,6 +337,7 @@ To monitor sync attempts and see logs:
 ## Next Steps (Task 7.5)
 
 ### Goal
+
 Fix the data transfer failure to enable complete end-to-end message sync.
 
 ### Investigation Tasks
@@ -358,21 +375,25 @@ Fix the data transfer failure to enable complete end-to-end message sync.
 ### Potential Fixes
 
 **If Network Issue**:
+
 - Configure firewall rules
 - Use VPN or proxy
 - Modify network settings
 
 **If Encryption Issue**:
+
 - Fix key exchange
 - Update encryption libraries
 - Implement workaround
 
 **If Server Restriction**:
+
 - Spoof user agent
 - Use different client identifier
 - Contact Zalo for Linux support
 
 **If File System Issue**:
+
 - Fix permissions
 - Change storage location
 - Ensure sufficient disk space
@@ -380,6 +401,7 @@ Fix the data transfer failure to enable complete end-to-end message sync.
 ### Success Criteria
 
 Task 7.5 is complete when:
+
 - [ ] Desktop successfully downloads backup data
 - [ ] Desktop successfully decrypts backup data
 - [ ] Messages sync from mobile to desktop
@@ -392,15 +414,18 @@ Task 7.5 is complete when:
 ## Files Modified
 
 ### Message Sync Fix
+
 1. `source-code/ZaDark/Zalo/app/pc-dist/lazy/main-startup.1778f55a0941d7ea8e7d.js`
 2. `source-code/ZaDark/Zalo/app/pc-dist/lazy/main-startup.1778f55a0941d7ea8e7d.beautified.js`
 3. `source-code/Zalo/Zalo/app/pc-dist/lazy/main-startup.1778f55a0941d7ea8e7d.js`
 
 ### DevTools Menu
+
 4. `source-code/ZaDark/Zalo/app/main-dist/main.js`
 5. `source-code/Zalo/Zalo/app/main-dist/main.js`
 
 ### Documentation
+
 6. `TASK-7-MESSAGE-SYNC-COMPLETE.md` (this file)
 7. `.kiro/specs/zalo-security-audit-fedora-port/tasks.md` (updated)
 
@@ -411,6 +436,7 @@ Task 7.5 is complete when:
 We successfully fixed the **client-side initialization blocker** that prevented message sync from working at all. The sync process now works significantly better:
 
 ### Achievements ✅
+
 - Fixed initialization issue
 - Removed crashes and errors
 - Enabled sync request flow
@@ -418,15 +444,18 @@ We successfully fixed the **client-side initialization blocker** that prevented 
 - Added DevTools access for debugging
 
 ### Remaining Work ❌
+
 - Fix data transfer failure (Task 7.5)
 - Enable complete end-to-end sync
 - Investigate server-side restrictions
 - Implement workarounds if needed
 
 ### Impact
+
 This is a **major improvement** for Zalo Linux users. While full sync doesn't work yet, the app is now stable and usable for real-time messaging, which is the primary use case.
 
 ### Recommendation
+
 **Use Zalo Linux for daily messaging** with the understanding that message history sync is limited. This is acceptable given that Zalo doesn't officially support Linux.
 
 ---
@@ -434,18 +463,21 @@ This is a **major improvement** for Zalo Linux users. While full sync doesn't wo
 ## Quick Reference
 
 ### For Users
+
 - ✅ Real-time messaging works perfectly
 - ⚠️ Message history doesn't sync
 - 💡 Use mobile app for old messages
 - 🔧 DevTools: Window → Toggle DevTools
 
 ### For Developers
+
 - 📝 Initialization fix in constructor
 - 🔍 Forced initialization bypasses config
 - 🐛 Data transfer fails at download stage
 - 🎯 Next: Task 7.5 - Fix data transfer
 
 ### For Testers
+
 - Test sync request (works)
 - Test data download (fails)
 - Monitor network traffic

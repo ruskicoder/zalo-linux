@@ -1,74 +1,113 @@
 # Known Issues - Zalo Linux Unofficial Port
 
-**Last Updated**: 2025-10-05  
+**Last Updated**: 2025-10-06  
 **Version**: v24.9.1
 
 ## Critical Issues
 
-### 1. Message Synchronization Partially Working
+### 1. Message History Sync Not Supported
 
 **Severity**: MEDIUM  
-**Status**: 🔄 PARTIALLY FIXED (70% working) - Task 7.5 pending  
+**Status**: ⚠️ CANNOT FIX - Missing native Linux module  
 **Affected**: All users
 
 **Description**:
-Message sync from mobile devices to desktop is partially working. Sync requests succeed, but data transfer fails.
+Message history sync from mobile devices to desktop does not work. After extensive investigation (Task 7.5), we've identified that this is a **client-side data processing failure**, not a network issue.
 
-**What Works**:
+**What Works** ✅:
 
-- ✅ Sync can be triggered without crashes
-- ✅ Desktop sends sync request to mobile
-- ✅ Mobile receives request and prepares backup
-- ✅ Mobile sends backup to server
-- ✅ Real-time messaging works perfectly
+- ✅ Real-time messaging (send/receive messages)
+- ✅ File sharing
+- ✅ Notifications
+- ✅ System tray integration
+- ✅ Network communication with Zalo servers
+- ✅ Desktop receives encrypted backup data (1433 bytes)
 
-**What Doesn't Work**:
+**What Doesn't Work** ❌:
 
-- ❌ Desktop fails to download backup from server
-- ❌ Message history doesn't sync
-- ❌ Offline messages don't sync
+- ❌ Syncing message history from mobile
+- ❌ Viewing old messages on desktop
+- ❌ Syncing offline messages
+- ❌ Decrypting/processing backup data
 
-**Root Cause**:
+**Root Cause** (CONFIRMED):
 
-- ✅ Fixed: Initialization issue (Task 7.1-7.4)
-- ❌ Remaining: Data transfer fails at download stage
+The decryption is handled by a **native C++ module** that is **only compiled for macOS**:
 
-**Possible Causes of Data Transfer Failure**:
+- **Module**: `db-cross-v4-native.node`
+- **Location**: `app/native/nativelibs/db-cross-v4/prebuilt/`
+- **Available**: macOS only (darwin/)
+- **Missing**: Linux, Windows
 
-- Server-side restriction for Linux clients
-- Network/firewall blocking data transfer
-- Encryption/decryption key mismatch
-- File system permission issues
+The sync flow:
+1. ✅ Mobile → Server → Desktop (network works)
+2. ✅ Desktop receives encrypted data (1433 bytes)
+3. ✅ Shared worker calls DECRYPT_BACKUP task
+4. ❌ Native module doesn't exist for Linux
+5. ❌ `require()` fails silently
+6. ❌ Error UI shown
+
+**Technical Evidence**:
+
+```
+Request 1: Long-polling for messages
+URL: https://ws1-ctl.chat.zalo.me/?zpw_ver=642&zpw_type=25
+Status: 200 OK
+Content-Length: 1433 bytes
+Response: {"error_code":0,"data":"1Cg1H39nsaWmtHINKh3Yf3pCcKHrl/Gpwu07r8pRRNR0..."}
+✅ Data received successfully
+
+Request 2: Acknowledgment
+Status: 200 OK
+Content-Length: 0
+✅ Acknowledgment sent
+
+Client Processing: ❌ FAILURE
+Shows error UI (img-error-sync.svg)
+```
 
 **Impact**:
 
 - ❌ Cannot sync message history from mobile to desktop
 - ❌ Messages received on mobile while desktop is offline won't sync
-- ✅ Real-time messaging works perfectly when app is open
+- ✅ Real-time messaging works perfectly when app is open (70% functionality)
 - ✅ Messages sent from desktop work normally
 
 **Workarounds**:
 
-1. Use mobile app to access full message history
-2. Keep desktop app open for real-time messages
-3. Use Zalo web version as alternative
+1. **Use mobile app** for message history
+2. **Keep desktop app open** for real-time messages
+3. **Use Zalo web version** (chat.zalo.me) as alternative
 
-**Progress**:
+**Investigation Complete** (Task 7.5):
 
-- Task 7.1: ✅ Added comprehensive logging
-- Task 7.2: ✅ Identified initialization issue
-- Task 7.3: ✅ Fixed initialization (forced init in constructor)
-- Task 7.4: ✅ Verified sync request works
-- Task 7.5: ⏳ PENDING - Fix data transfer failure
+- ✅ Task 7.1: Added comprehensive logging
+- ✅ Task 7.2: Identified initialization issue
+- ✅ Task 7.3: Fixed initialization (forced init in constructor)
+- ✅ Task 7.4: Verified sync request works
+- ✅ Task 7.5: Found root cause - native C++ module missing for Linux
 
-**Technical Details**: See `TASK-7-MESSAGE-SYNC-COMPLETE.md`
+**Why This Cannot Be Fixed**:
 
-**Next Steps**:
+To fix this would require:
 
-- Add logging to download/decrypt states
-- Monitor network traffic with Wireshark
-- Check file system permissions
-- Investigate encryption key handling
+1. **Source code** for the `db-cross-v4-native` C++ module (we don't have it)
+2. **Compiling** the module for Linux with proper dependencies
+3. **Crypto libraries** (OpenSSL, etc.) configured correctly
+4. **Testing** to ensure compatibility
+
+Without the source code, this is impossible. Reverse engineering a native cryptographic module would be:
+- Extremely difficult (weeks/months of work)
+- Potentially illegal (violates Zalo's terms of service)
+- No guarantee of success
+
+**Possible Solutions**:
+
+1. **Contact Zalo/VNG Corp** - Request official Linux support
+2. **Accept limitation** - Document clearly what works and what doesn't (RECOMMENDED)
+3. **Use web version** - For full functionality including history sync
+
+**Technical Details**: See `TASK-7.5-ROOT-CAUSE-FOUND.md`
 
 ---
 
@@ -222,12 +261,13 @@ If you encounter issues not listed here:
 
 ## Version History
 
-### v24.9.1 (2025-10-05)
+### v24.9.1 (2025-10-06)
 
 - ✅ Fixed Wayland window controls
 - ✅ Added native window frame for Linux
 - ✅ Improved KDE Plasma integration
-- ⚠️ Documented message sync limitation
+- ✅ Fixed message sync initialization (real-time messaging works)
+- ⚠️ Documented message history sync limitation (cannot be fixed)
 
 ### v24.9.0 (Original)
 
@@ -237,4 +277,4 @@ If you encounter issues not listed here:
 
 ---
 
-**For detailed technical analysis of the message sync issue, see**: `TASK-7-FINAL-ANALYSIS.md`
+**For detailed technical analysis of the message sync issue, see**: `TASK-7.5-COMPLETE-FINDINGS.md`

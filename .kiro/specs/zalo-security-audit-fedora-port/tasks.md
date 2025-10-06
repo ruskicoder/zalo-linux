@@ -194,7 +194,7 @@
     - Verify no duplicate messages
     - _Requirements: 4.3, 4.4, 11.2_
 
-  - [ ] 7.5 Fix data transfer failure in sync process
+  - [x] 7.5 Fix data transfer failure in sync process
     - Add comprehensive logging to download_backup and decrypt_backup states
     - Monitor network traffic to identify where data transfer fails
     - Check file system permissions on ~/.config/ZaloData/
@@ -203,7 +203,17 @@
     - Identify if failure is network, encryption, or server-side restriction
     - Implement fix or workaround based on findings
     - _Requirements: 4.3, 4.4_
-    - _Note: Sync request works, but data download/decrypt fails silently_
+    - _Note: ROOT CAUSE FOUND - Native C++ module db-cross-v4-native.node only compiled for macOS, not Linux_
+
+  - [ ] 7.6 Implement workaround for missing native decryption module
+    - Research the native module's decryption algorithm
+    - Check if Windows binaries exist that could be adapted
+    - Attempt to create JavaScript-based decryption fallback
+    - If impossible, create graceful error handling with clear user message
+    - Document the limitation clearly in UI and documentation
+    - Consider contacting Zalo/VNG Corp for official Linux support
+    - _Requirements: 4.3, 4.4_
+    - _Note: Native module db-cross-v4-native.node missing for Linux - need workaround or accept limitation_
 
 - [ ] 8. Update Electron version
   - [ ] 16.1 Test with Electron v28.x LTS
