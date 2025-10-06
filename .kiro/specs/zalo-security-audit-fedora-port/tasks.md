@@ -205,91 +205,15 @@
     - _Requirements: 4.3, 4.4_
     - _Note: ROOT CAUSE FOUND - Native C++ module db-cross-v4-native.node only compiled for macOS, not Linux_
 
-  - [x] 7.6 Research and plan reverse engineering of native decryption module
-    - Analyze native module binary to identify algorithms
-    - Confirm algorithms are standard (AES, LZMA, MD5)
-    - Create analysis tools and scripts
-    - Document feasibility of JavaScript implementation
-    - Create capture and analysis tools
-    - Plan implementation approach
+  - [ ] 7.6 Implement workaround for missing native decryption module
+    - Research the native module's decryption algorithm
+    - Check if Windows binaries exist that could be adapted
+    - Attempt to create JavaScript-based decryption fallback
+    - If impossible, create graceful error handling with clear user message
+    - Document the limitation clearly in UI and documentation
+    - Consider contacting Zalo/VNG Corp for official Linux support
     - _Requirements: 4.3, 4.4_
-    - _Note: COMPLETED - Identified standard algorithms, JavaScript implementation is feasible_
-
-  - [ ] 7.7 Reverse engineer and implement native decryption module in JavaScript
-    - [ ] 7.7.1 Capture encrypted backup data from sync process
-      - Modify shared worker to intercept encrypted data before native module call
-      - Add file capture code to _decryptBackupFormat1 function
-      - Run Zalo and trigger message history sync
-      - Capture encrypted file, privateKey, and metadata to /tmp/zalo-capture/
-      - Verify encrypted file and metadata.json are saved correctly
-      - _Requirements: 4.3, 4.4_
-      - _Tools: capture-encrypted-backup.js provides instructions_
-    
-    - [ ] 7.7.2 Reverse engineer file format through binary analysis
-      - Analyze captured encrypted file with hex editor
-      - Calculate Shannon entropy to confirm encryption
-      - Identify file structure: header, MD5 hash location, IV location, encrypted data offset
-      - Search for magic bytes or file signatures
-      - Analyze byte frequency distribution
-      - Check for repeating blocks (indicates ECB mode vs CBC/CFB)
-      - Document exact file format with byte offsets
-      - _Requirements: 4.3, 4.4_
-      - _Tools: analyze-captured-data.js automates analysis_
-    
-    - [ ] 7.7.3 Reverse engineer encryption parameters through systematic testing
-      - Test AES-256-CBC with SHA256(privateKey) as key
-      - Test AES-192-CBC with SHA256(privateKey) truncated to 192 bits
-      - Test AES-128-CBC with MD5(privateKey) as key
-      - Test AES-256-CFB and AES-256-ECB modes
-      - Try different key derivation methods: direct, SHA256, MD5, PBKDF2
-      - Verify decryption success by checking MD5 hash matches
-      - Check for LZMA signature (FD377A58) or SQLite signature (53514C69)
-      - Document working combination of: AES mode, key size, key derivation, file offsets
-      - _Requirements: 4.3, 4.4_
-      - _Tools: test-decryption-template.js for systematic testing_
-    
-    - [ ] 7.7.4 Implement complete decryption pipeline
-      - Install lzma-native package for LZMA decompression
-      - Implement file parser based on reverse engineered format
-      - Implement key derivation function matching discovered method
-      - Implement AES decryption with correct mode and parameters
-      - Implement MD5 verification of decrypted data
-      - Implement LZMA decompression of verified data
-      - Handle errors gracefully with proper error codes
-      - Test complete pipeline with captured data
-      - Verify output is valid SQLite database
-      - _Requirements: 4.3, 4.4_
-    
-    - [ ] 7.7.5 Create JavaScript binding module matching native API
-      - Create binding-js.js implementing native module interface
-      - Implement decompressAndDecryptDb(inputPath, outputPath, privateKey)
-      - Implement decompressAndDecryptDb_V2(inputPath, outputPath, privateKey, progressCallback)
-      - Return same error codes and structure as native module
-      - Add comprehensive logging for debugging
-      - Add performance monitoring
-      - Test API compatibility with shared worker expectations
-      - _Requirements: 4.3, 4.4_
-    
-    - [ ] 7.7.6 Integrate JavaScript implementation into Zalo
-      - Update binding.js to load binding-js.js on Linux platform
-      - Keep stub as fallback for error cases
-      - Test message history sync in Zalo app
-      - Verify messages decrypt and appear correctly in UI
-      - Verify no data corruption or missing messages
-      - Test performance (target <5 seconds for typical sync)
-      - Apply same changes to both Zalo and ZaDark variants
-      - Test on both variants
-      - _Requirements: 4.3, 4.4, 11.2_
-    
-    - [ ] 7.7.7 Update documentation after successful implementation
-      - Update KNOWN-ISSUES.md (remove message sync limitation)
-      - Update FEATURE-MATRIX.md (mark message history sync as working)
-      - Update README.md with implementation success story
-      - Document the reverse engineering process and findings
-      - Document the JavaScript implementation details
-      - Add troubleshooting guide for decryption issues
-      - _Requirements: 10.1, 10.2, 10.3_
-    - _Note: Reverse engineering native module - uses standard crypto (AES + LZMA + MD5), implementable in JavaScript_
+    - _Note: Native module db-cross-v4-native.node missing for Linux - need workaround or accept limitation_
 
 - [ ] 8. Update Electron version
   - [ ] 16.1 Test with Electron v28.x LTS
