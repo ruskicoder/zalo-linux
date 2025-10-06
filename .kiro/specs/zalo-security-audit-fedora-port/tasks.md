@@ -13,7 +13,6 @@
   - Identify Electron version and configuration
   - _Requirements: 1.1, 2.1_
 
-
 - [x] 3. Fix Wayland window controls
   - [x] 3.1 Test current behavior on Wayland and X11
     - Launch app and document window control issues
@@ -166,7 +165,7 @@
   - _Requirements: 5.1_
   - _Note: User requested simplified tray with no settings_
 
-- [-] 7. Debug and fix message synchronization
+- [x] 7. Debug and fix message synchronization
   - [x] 7.1 Add comprehensive logging to sync service
     - Identify message sync service in deobfuscated code
     - Add logging for connection status, sync attempts, errors
@@ -181,7 +180,7 @@
     - Check if it's server-side, client-side, or network issue
     - _Requirements: 4.3, 4.4_
 
-  - [ ] 7.3 Implement fix based on root cause
+  - [x] 7.3 Implement fix based on root cause
     - If WebSocket issue: Fix connection logic
     - If database issue: Fix IndexedDB/SQLite sync
     - If authentication issue: Fix token handling
@@ -194,6 +193,17 @@
     - Test sync after offline period
     - Verify no duplicate messages
     - _Requirements: 4.3, 4.4, 11.2_
+
+  - [ ] 7.5 Fix data transfer failure in sync process
+    - Add comprehensive logging to download_backup and decrypt_backup states
+    - Monitor network traffic to identify where data transfer fails
+    - Check file system permissions on ~/.config/ZaloData/
+    - Investigate encryption/decryption key handling
+    - Test with network packet capture (Wireshark) to see server responses
+    - Identify if failure is network, encryption, or server-side restriction
+    - Implement fix or workaround based on findings
+    - _Requirements: 4.3, 4.4_
+    - _Note: Sync request works, but data download/decrypt fails silently_
 
 - [ ] 8. Update Electron version
   - [ ] 16.1 Test with Electron v28.x LTS
@@ -252,7 +262,6 @@
     - Test message sync
     - Test all major features
     - _Requirements: 2.5, 11.1, 11.2, 11.3_
-
 
 - [ ] 10. Implement privacy controls
   - [ ] 16.1 Create Privacy Manager module
